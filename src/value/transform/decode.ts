@@ -52,7 +52,7 @@ import { IsStandardObject, IsArray, IsValueType } from '../guard/index'
 // ------------------------------------------------------------------
 // TypeGuard
 // ------------------------------------------------------------------
-import { IsTransform, IsSchema, IsOptional } from '../../type/guard/type'
+import { IsTransform, IsSchema } from '../../type/guard/type'
 // ------------------------------------------------------------------
 // Errors
 // ------------------------------------------------------------------
@@ -73,13 +73,7 @@ export class TransformDecodeError extends TypeBoxError {
 // prettier-ignore
 function Default(schema: TSchema, value: any) {
   try {
-    if (IsTransform(schema)) {
-      if (IsOptional(schema) && value === undefined) {
-        return undefined
-      }
-      return schema[TransformKind].Decode(value)
-    }
-    return value
+    return IsTransform(schema) ? schema[TransformKind].Decode(value) : value
   } catch (error) {
     if (error instanceof TypeBoxError) throw error
     throw new TransformDecodeError(schema, value, error)
