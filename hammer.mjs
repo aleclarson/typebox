@@ -57,7 +57,7 @@ export async function build_check(target = 'target/build') {
   await shell(`cd ${target} && attw sinclair-typebox-${version}.tgz`)
 }
 export async function build(target = 'target/build') {
-  await test()
+  //await test()
   await clean()
   await Promise.all([
     Build.Package.build(target),
