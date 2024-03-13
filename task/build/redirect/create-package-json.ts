@@ -39,47 +39,6 @@ export function createPackageJson(target: string, submodules: string[]) {
 }
 // prettier-ignore
 function resolvePackageJson(submodules: string[]) {
-  return {
-    ...resolveMetadata(),
-    ...resolveExports(submodules)
-  }
-}
-// prettier-ignore
-function resolveSubmoduleExports(submodule: string) {
-  return {
-    require: {
-      types: `./build/require/${submodule}/index.d.ts`,
-      default: `./build/require/${submodule}/index.js`,
-    },
-    import: {
-      types: `./build/import/${submodule}/index.d.mts`,
-      default: `./build/import/${submodule}/index.mjs`,
-      
-    }
-  }
-}
-// prettier-ignore
-function resolveExports(submodules: string[]) {
-  const exports = submodules.reduce((acc, submodule) => {
-    return { ...acc, [`./${submodule}`]: resolveSubmoduleExports(submodule) }
-  }, {
-    // ... and root module
-    ".": {
-      "require": {
-        "types": "./build/require/index.d.ts",
-        "default": "./build/require/index.js",
-        
-      },
-      "import": {
-        "types": "./build/import/index.d.mts",
-        "default": "./build/import/index.mjs",
-      }
-    }
-  })
-  return { exports }
-}
-// prettier-ignore
-function resolveMetadata() {
   const packagePath = Path.join(process.cwd(), 'package.json')
   const packageJson = JSON.parse(Fs.readFileSync(packagePath, 'utf-8'))
   return {
