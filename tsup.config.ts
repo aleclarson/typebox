@@ -29,6 +29,7 @@ function createPackageJson(): esbuild.Plugin {
     pkg.main = "index.mjs";
     fs.writeFileSync(`${outDir}/package.json`, JSON.stringify(pkg, null, 2));
     fs.copyFileSync('license', `${outDir}/license`);
+    fs.copyFileSync('readme.md', `${outDir}/readme.md`);
   });
 }
 
