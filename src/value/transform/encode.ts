@@ -28,7 +28,7 @@ THE SOFTWARE.
 
 import { Kind, TransformKind } from '../../type/symbols/index'
 import { TypeBoxError } from '../../type/error/index'
-import { ValueError } from '../../errors/index'
+import type { ValueError } from '../../errors/index'
 import { KeyOfPropertyKeys } from '../../type/keyof/index'
 import { Index } from '../../type/indexed/index'
 import { Deref } from '../deref/index'
