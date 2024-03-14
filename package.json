@@ -1,5 +1,5 @@
 {
-  "name": "@sinclair/typebox",
+  "name": "@alloc/typebox",
   "version": "0.32.15",
   "description": "Json Schema Type Builder with Static Type Resolution for TypeScript",
   "keywords": [
