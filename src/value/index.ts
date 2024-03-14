@@ -29,7 +29,8 @@ THE SOFTWARE.
 // ------------------------------------------------------------------
 // Errors (re-export)
 // ------------------------------------------------------------------
-export { ValueError, ValueErrorType, ValueErrorIterator } from '../errors/index'
+export { ValueErrorType, ValueErrorIterator } from '../errors/index'
+export type { ValueError } from '../errors/index'
 // ------------------------------------------------------------------
 // Guards
 // ------------------------------------------------------------------
