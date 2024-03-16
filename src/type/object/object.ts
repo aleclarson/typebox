@@ -74,6 +74,8 @@ export interface ObjectOptions extends SchemaOptions {
   minProperties?: number
   /** The maximum number of properties allowed on this object */
   maxProperties?: number
+  /** @internal */
+  kindSchema?: TSchema
 }
 export interface TObject<T extends TProperties = TProperties> extends TSchema, ObjectOptions {
   [Kind]: 'Object'

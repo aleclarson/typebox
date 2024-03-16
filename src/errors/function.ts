@@ -159,6 +159,8 @@ export function DefaultErrorFunction(error: ErrorFunctionParameter) {
       return 'Expected union value'
     case ValueErrorType.Void:
       return 'Expected void'
+    case ValueErrorType.Schema:
+      return 'Expected schema'
     case ValueErrorType.Kind:
       return `Expected kind '${error.schema[Kind]}'`
     default:

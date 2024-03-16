@@ -27,12 +27,13 @@ THE SOFTWARE.
 ---------------------------------------------------------------------------*/
 
 import { TransformEncode, TransformDecode, HasTransform, TransformDecodeCheckError, TransformEncodeCheckError } from '../value/transform/index'
-import { Errors, ValueErrorIterator } from '../errors/index'
+import { Errors, ValueError, ValueErrorIterator } from '../errors/index'
 import { TypeSystemPolicy } from '../system/index'
 import { TypeBoxError } from '../type/error/index'
 import { Deref } from '../value/deref/index'
 import { Hash } from '../value/hash/index'
 import { Kind } from '../type/symbols/index'
+import { Schema } from '../type/schema/index'
 
 import { TypeRegistry, FormatRegistry } from '../type/registry/index'
 import { KeyOfPattern } from '../type/keyof/index'
@@ -191,8 +192,8 @@ export class TypeCompilerUnknownTypeError extends TypeBoxError {
   }
 }
 export class TypeCompilerTypeGuardError extends TypeBoxError {
-  constructor(public readonly schema: TSchema) {
-    super('Preflight validation check failed to guard for the given schema')
+  constructor(public readonly schema: TSchema, public readonly error: ValueError) {
+    super('Preflight validation check failed to guard for the given schema: ' + error.message)
   }
 }
 // ------------------------------------------------------------------
@@ -238,7 +239,7 @@ export namespace TypeCompiler {
   function* FromAny(schema: TAny, references: TSchema[], value: string): IterableIterator<string> {
     yield 'true'
   }
-  function* FromArray(schema: TArray, references: TSchema[], value: string): IterableIterator<string> {
+  function* FromArray(schema: TArray, references: TSchema[], value: string, path: string[] = []): IterableIterator<string> {
     yield `Array.isArray(${value})`
     const [parameter, accumulator] = [CreateParameter('value', 'any'), CreateParameter('acc', 'number')]
     if (IsNumber(schema.maxItems)) yield `${value}.length <= ${schema.maxItems}`
@@ -609,8 +610,15 @@ export namespace TypeCompiler {
     state.variables.clear()
     state.functions.clear()
     state.instances.clear()
-    if (!IsSchema(schema)) throw new TypeCompilerTypeGuardError(schema)
-    for (const schema of references) if (!IsSchema(schema)) throw new TypeCompilerTypeGuardError(schema)
+    const schemaType = Schema()
+    for (const error of Errors(schemaType, schema)) {
+      throw new TypeCompilerTypeGuardError(schema, error)
+    }
+    for (const reference of references) {
+      for (const error of Errors(schemaType, reference)) {
+        throw new TypeCompilerTypeGuardError(reference, error)
+      }
+    }
     return Build(schema, references, options)
   }
   /** Compiles a TypeBox type for optimal runtime type checking. Types must be valid TypeBox types of TSchema */

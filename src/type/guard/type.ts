@@ -583,9 +583,9 @@ export function IsSchema(value: unknown): value is TSchema {
   ) && (
       IsAny(value) ||
       IsArray(value) ||
-      IsBoolean(value) ||
-      IsBigInt(value) ||
       IsAsyncIterator(value) ||
+      IsBigInt(value) ||
+      IsBoolean(value) ||
       IsConstructor(value) ||
       IsDate(value) ||
       IsFunction(value) ||

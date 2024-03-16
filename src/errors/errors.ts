@@ -32,6 +32,7 @@ import { TypeRegistry, FormatRegistry } from '../type/registry/index'
 import { ExtendsUndefinedCheck } from '../type/extends/extends-undefined'
 import { GetErrorFunction } from './function'
 import { TypeBoxError } from '../type/error/index'
+import { Check } from '../value/check/index'
 import { Deref } from '../value/deref/index'
 import { Hash } from '../value/hash/index'
 import { Kind } from '../type/symbols/index'
@@ -142,6 +143,7 @@ export enum ValueErrorType {
   Object,
   Promise,
   RegExp,
+  Schema,
   StringFormatUnknown,
   StringFormat,
   StringMaxLength,
@@ -375,6 +377,9 @@ function* FromNumber(schema: TNumber, references: TSchema[], path: string, value
 }
 function* FromObject(schema: TObject, references: TSchema[], path: string, value: any): IterableIterator<ValueError> {
   if (!TypeSystemPolicy.IsObjectLike(value)) return yield Create(ValueErrorType.Object, schema, path, value)
+  if (schema.kindSchema && Check(schema.kindSchema, value[Kind])) {
+    yield Create(ValueErrorType.Schema, schema, path, value)
+  }
   if (IsDefined<number>(schema.minProperties) && !(Object.getOwnPropertyNames(value).length >= schema.minProperties)) {
     yield Create(ValueErrorType.ObjectMinProperties, schema, path, value)
   }
