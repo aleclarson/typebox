@@ -10,10 +10,10 @@ mkdirSync(outDir);
 export default defineConfig({
   entry: glob.sync("src/**/*.ts"),
   outDir,
-  format: ["esm"],
-  outExtension: () => ({
-    js: '.js',
-    dts: '.d.ts',
+  format: ["esm", "cjs"],
+  outExtension: (ctx) => ({
+    js: ctx.format === "cjs" ? ".js" : ".mjs",
+    dts: ".d.ts",
   }),
   bundle: false,
   esbuildPlugins: [createPackageJson(), createSubPackages()],
@@ -26,10 +26,11 @@ function createPackageJson(): esbuild.Plugin {
     delete pkg.devDependencies;
     delete pkg.scripts;
 
-    pkg.main = "index.mjs";
+    pkg.main = "index.js";
+    pkg.module = "index.mjs";
     fs.writeFileSync(`${outDir}/package.json`, JSON.stringify(pkg, null, 2));
-    fs.copyFileSync('license', `${outDir}/license`);
-    fs.copyFileSync('readme.md', `${outDir}/readme.md`);
+    fs.copyFileSync("license", `${outDir}/license`);
+    fs.copyFileSync("readme.md", `${outDir}/readme.md`);
   });
 }
 
@@ -47,7 +48,8 @@ function createSubPackages(): esbuild.Plugin {
 
       const pkg = {
         name,
-        main: "index.mjs",
+        main: "index.js",
+        module: "index.mjs",
       };
       fs.writeFileSync(`${dir}/package.json`, JSON.stringify(pkg, null, 2));
     }
@@ -68,5 +70,5 @@ function createPostPlugin(name: string, fn: () => void): esbuild.Plugin {
 function mkdirSync(name: string) {
   try {
     fs.mkdirSync(name);
-  }catch{}
+  } catch {}
 }
