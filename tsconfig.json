@@ -5,14 +5,13 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "paths": {
-      "@sinclair/typebox/compiler": ["src/compiler/index.ts"],
-      "@sinclair/typebox/errors": ["src/errors/index.ts"],
-      "@sinclair/typebox/system": ["src/system/index.ts"],
-      "@sinclair/typebox/type": ["src/type/index.ts"],
-      "@sinclair/typebox/value": ["src/value/index.ts"],
-      "@sinclair/typebox": ["src/index.ts"],
+      "@sinclair/typebox/compiler": ["./src/compiler/index.ts"],
+      "@sinclair/typebox/errors": ["./src/errors/index.ts"],
+      "@sinclair/typebox/system": ["./src/system/index.ts"],
+      "@sinclair/typebox/type": ["./src/type/index.ts"],
+      "@sinclair/typebox/value": ["./src/value/index.ts"],
+      "@sinclair/typebox": ["./src/index.ts"],
     }
   }
 }
